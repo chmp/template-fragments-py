@@ -1,0 +1,18 @@
+<body>
+<ul>
+{% fragment listing %}
+    {%- for item in listing %}
+    <li>{{ item }}</li>
+    {%- endfor %}
+{% endfragment %}
+</ul>
+{% fragment content %}
+<div>
+    {%- for item in content %}
+    {% fragment content-item %}
+    <div>{{ item }}</div>
+    {% endfragment %}
+    {%- endfor %}
+</div>
+{% endfragment %}
+</body>
