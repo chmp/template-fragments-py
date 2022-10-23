@@ -1,4 +1,28 @@
-# Template fragments for Jinja2
+# Template fragments for jinja-like engines
+
+Usage:
+
+```python
+from template_fragments import filter_template
+
+template_source = """
+<html>
+    <head>
+        <title>Example</title>
+    </head>
+    <body>
+        <div>
+        {% fragment content %}
+            <!-- content here -->
+        {% endfragment %}
+        </div>
+    </body>
+</html>
+"""
+
+content_full = filter_template(template_source, "")
+content_item = filter_template(template_source, "item")
+```
 
 Usage with [Flask]:
 
