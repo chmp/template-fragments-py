@@ -1,12 +1,13 @@
 # ruff: noqa: E401, E731
 import functools as ft
+import pathlib
 import subprocess
 import sys
 
 __effect = lambda effect: lambda func: [func, effect(func.__dict__)][0]
 cmd = lambda **kw: __effect(lambda d: d.setdefault("@cmd", {}).update(kw))
 arg = lambda *a, **kw: __effect(lambda d: d.setdefault("@arg", []).append((a, kw)))
-self_path = __import__("pathlib").Path(__file__).parent.resolve()
+self_path = pathlib.Path(__file__).parent.resolve()
 once = lambda: lambda func: ft.lru_cache(maxsize=None)(func)
 
 
@@ -17,6 +18,7 @@ def precommit(backtrace=False):
     format()
     lint()
     test(backtrace=backtrace)
+    update_docs()
 
 
 @cmd()
@@ -42,13 +44,23 @@ def test(backtrace):
 
 @cmd()
 def update_docs():
-    raise NotImplementedError()
+    print(":: update Readme.md")
+    __import__("minidoc").update_docs("Readme.md")
 
 
 @cmd()
 @once()
 def generate_tests():
-    python(self_path / "specs" / "generate_tests.py")
+    src_path = self_path / "specs" / "generate_tests.py"
+    dst_path = self_path / "tests" / "test_generated.py"
+    spec_paths = list(self_path.joinpath("specs").glob("*.toml"))
+
+    if (
+        not dst_path.exists()
+        or src_path.stat().st_mtime > dst_path.stat().st_mtime
+        or any(p.stat().st_mtime > dst_path.stat().st_mtime for p in spec_paths)
+    ):
+        python(src_path)
 
 
 def python(*args, **kwargs):
