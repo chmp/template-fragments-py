@@ -6,13 +6,12 @@ description = "Template fragments for jinja-like engines"
 readme  = "Readme.md"
 license = {text = "MIT"}
 
-[project.urls]
-Repository = "https://github.com/chmp/template-fragments-py"
-
 classifiers = []
-
 requires-python = ">=3.8"
 dependencies = []
+
+[project.urls]
+Repository = "https://github.com/chmp/template-fragments-py"
 
 [project.optional-dependencies]
 jinja = ["jinja2"]
