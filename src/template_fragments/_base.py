@@ -33,7 +33,7 @@ def filter_template(src: str, fragment: str = "") -> str:
     )
 
 
-def split_template(src: str) -> Dict[str, str]:
+def split_templates(src: str) -> Dict[str, str]:
     """Return all fragments contained in the template
 
     The key `""` gives the source template with any fragment directives removed.

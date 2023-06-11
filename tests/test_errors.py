@@ -2,10 +2,10 @@ import functools as ft
 
 import pytest
 
-from template_fragments import TemplateFragmentError, filter_template, split_template
+from template_fragments import TemplateFragmentError, filter_template, split_templates
 
 funcs = [
-    split_template,
+    split_templates,
     ft.partial(filter_template, fragment=""),
     ft.partial(filter_template, fragment="dummy"),
 ]

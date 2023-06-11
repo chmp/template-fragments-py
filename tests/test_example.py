@@ -2,7 +2,7 @@ import pytest
 
 from jinja2 import DictLoader, Environment
 
-from template_fragments import filter_template, split_template
+from template_fragments import filter_template, split_templates
 from template_fragments.jinja import FragmentLoader
 
 source = """\
@@ -75,8 +75,8 @@ def test_filter_template(fragment, expected):
     assert actual == expected
 
 
-def test_split_template():
-    actual = split_template(source)
+def test_split_templates():
+    actual = split_templates(source)
     expected = dict(expected_fragments)
 
     assert actual == expected
