@@ -179,7 +179,6 @@ def test_example_2():
     assert split_templates(template) == expected
 
 
-@pytest.mark.xfail
 def test_block_fragments():
     template = concat(
         "<body>\n",
@@ -217,7 +216,6 @@ def test_block_fragments():
     assert split_templates(template) == expected
 
 
-@pytest.mark.xfail
 def test_nested_block_fragments():
     template = concat(
         "<body>\n",

@@ -7,7 +7,7 @@ V = TypeVar("V")
 T = TypeVar("T")
 
 fragment_tag = re.compile(
-    r"(?P<head>[^\{]*)\{%\s+(?P<tag>fragment|endfragment)(?P<data>[^%]+)%\}(?P<tail>.*)"
+    r"(?P<head>[^\{]*)\{%\s+(?P<tag>[^\s]+)(?P<data>[^%]+)%\}(?P<tail>.*)"
 )
 
 
@@ -54,7 +54,7 @@ def _split_impl(src: str) -> Iterable[Tuple[Set[str], str]]:
 
     line_idx = 0
     for line_idx, line in enumerate(src.split("\n")):
-        tag, data = parse_fragment_tag(line, line_idx)
+        tag, head, data = parse_fragment_tag(line, line_idx)
         if tag == "fragment":
             if reentrant := data & active_fragments:
                 raise TemplateFragmentError(
@@ -73,6 +73,23 @@ def _split_impl(src: str) -> Iterable[Tuple[Set[str], str]]:
 
             active_fragments = active_fragments - stack.pop()
 
+        elif tag == "fragment-block":
+            if reentrant := data & active_fragments:
+                raise TemplateFragmentError(
+                    f"Reentrant fragments: {reentrant} in line {line_idx + 1}"
+                )
+
+            stack.append(data)
+            active_fragments.update(data)
+            seen_fragments.update(data)
+
+            (block_name,) = data
+            yield active_fragments, f"{head}{{% block {block_name} %}}"
+
+        elif tag == "endfragment-block":
+            yield active_fragments, f"{head}{{% endblock %}}"
+            active_fragments = active_fragments - stack.pop()
+
         else:
             yield active_fragments, line
 
@@ -85,7 +102,8 @@ def _split_impl(src: str) -> Iterable[Tuple[Set[str], str]]:
 
 def parse_fragment_tag(s, line_idx) -> Tuple[Optional[str], Set[str]]:
     if (m := fragment_tag.match(s)) is not None:
-        if m.group("head").strip() or m.group("tail").strip():
+        head = m.group("head")
+        if head.strip() or m.group("tail").strip():
             raise TemplateFragmentError()
 
         tag = m.group("tag")
@@ -96,15 +114,21 @@ def parse_fragment_tag(s, line_idx) -> Tuple[Optional[str], Set[str]]:
                 f"fragment start tag without fragment names in line {line_idx + 1}"
             )
 
-        elif tag == "endfragment" and data:
+        if tag in {"endfragment", "endfragment-block"} and data:
             raise TemplateFragmentError(
                 f"fragment end tag with fragment names in line {line_idx + 1}"
             )
 
-        return tag, data
+        if tag == "fragment-block" and len(data) != 1:
+            raise TemplateFragmentError(
+                "fragment-block start tag must have a single name in line "
+                f"{line_idx + 1}"
+            )
+
+        return tag, head, data
 
     else:
-        return None, []
+        return None, "", []
 
 
 def flatten(items: Iterable[Iterable[T]]) -> Iterable[T]:

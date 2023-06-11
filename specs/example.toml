@@ -98,7 +98,6 @@ expected = """
 """
 
 [[test]]
-mark = ["xfail"]
 name = "block fragments"
 source = """
 <body>
@@ -137,8 +136,6 @@ expected = """
 """
 
 [[test]]
-mark = ["xfail"]
-
 name = "nested block fragments"
 source = """
 <body>
