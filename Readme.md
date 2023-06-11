@@ -27,7 +27,7 @@ content_full = filter_template(template_source, "")
 content_item = filter_template(template_source, "item")
 ```
 
-Usage with [Flask]:
+Usage with [Flask][flask] and [Jinja2][jinja2]:
 
 ```python
 from template_fragments.jinja import FragmentLoader
@@ -132,5 +132,5 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 ```
 
-[flask]: https://flask.palletsprojects.com/en/2.2.x/
-[jinja2]: https://jinja.palletsprojects.com/en/3.0.x/
+[flask]: https://flask.palletsprojects.com/en/latest/
+[jinja2]: https://jinja.palletsprojects.com/en/latest/
