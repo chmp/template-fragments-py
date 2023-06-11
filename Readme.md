@@ -33,6 +33,16 @@ Usage with [Flask]:
 from template_fragments.jinja import FragmentLoader
 
 app.jinja_loader = FragmentLoader(app.jinja_loader)
+
+
+@app.route("/")
+def get_index():
+    return render_template("index.html", ...)
+
+
+@app.route("/item/<item>")
+def get_item(item):
+    return render_template("index.html#item", ...)
 ```
 
 ## API reference
