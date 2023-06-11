@@ -1,5 +1,7 @@
 # Template fragments for jinja-like engines
 
+[API reference](#api-reference)
+
 Usage:
 
 ```python
@@ -78,7 +80,7 @@ Common base class for all non-exit exceptions.
 
 <!-- minidoc -->
 
-###  `template_fragments.jinja``
+### `template_fragments.jinja`
 
 <!-- minidoc "module": "template_fragments.jinja", "header": false -->
 Jinja specific helpers
