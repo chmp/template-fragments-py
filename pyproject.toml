@@ -5,6 +5,7 @@ authors = [{ name = "Christopher Prohm", email = "mail@cprohm.de" }]
 description = "Template fragments for jinja-like engines"
 long_description = file: Readme.md
 license = {text = "MIT"}
+url = https://github.com/chmp/template-fragments-py
 
 classifiers = []
 
