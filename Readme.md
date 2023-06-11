@@ -132,5 +132,5 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 ```
 
-[flask]: https://flask.palletsprojects.com/en/latest/
-[jinja2]: https://jinja.palletsprojects.com/en/latest/
+[flask]: https://flask.palletsprojects.com/
+[jinja2]: https://jinja.palletsprojects.com/
