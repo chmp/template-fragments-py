@@ -1,6 +1,6 @@
 [project]
 name = "template-fragments"
-version = "22.10.0"
+version = "23.6.0"
 authors = [{ name = "Christopher Prohm", email = "mail@cprohm.de" }]
 description = "Template fragments for jinja-like engines"
 license = {text = "MIT"}
