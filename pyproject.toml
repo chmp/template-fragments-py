@@ -12,7 +12,7 @@ dependencies = []
 
 [project.optional-dependencies]
 jinja = ["jinja2"]
-dev = ["build", "jinja2", "pytest", "flask"]
+dev = ["build", "black", "ruff", "jinja2", "pytest", "flask"]
 
 [build-system]
 requires = ["setuptools", "setuptools-scm"]
