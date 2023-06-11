@@ -52,17 +52,25 @@ def _split_impl(src: str) -> Iterable[Tuple[Set[str], str]]:
     active_fragments: Set[str] = {""}
     seen_fragments: Set[str] = set()
 
-    for line in src.split("\n"):
-        tag, data = parse_fragment_tag(line)
+    line_idx = 0
+    for line_idx, line in enumerate(src.split("\n")):
+        tag, data = parse_fragment_tag(line, line_idx)
         if tag == "fragment":
             if reentrant := data & active_fragments:
-                raise TemplateFragmentError(f"Reentrant fragments: {reentrant}")
+                raise TemplateFragmentError(
+                    f"Reentrant fragments: {reentrant} in line {line_idx + 1}"
+                )
 
             stack.append(data)
             active_fragments.update(data)
             seen_fragments.update(data)
 
         elif tag == "endfragment":
+            if not stack:
+                raise TemplateFragmentError(
+                    f"Unbalanced fragments in line {line_idx + 1}"
+                )
+
             active_fragments = active_fragments - stack.pop()
 
         else:
@@ -71,8 +79,11 @@ def _split_impl(src: str) -> Iterable[Tuple[Set[str], str]]:
     # append a trailing newline for fragments
     yield seen_fragments, ""
 
+    if stack:
+        raise TemplateFragmentError(f"Unbalanced fragments in line {line_idx + 1}")
 
-def parse_fragment_tag(s) -> Tuple[Optional[str], Set[str]]:
+
+def parse_fragment_tag(s, line_idx) -> Tuple[Optional[str], Set[str]]:
     if (m := fragment_tag.match(s)) is not None:
         if m.group("head").strip() or m.group("tail").strip():
             raise TemplateFragmentError()
@@ -81,10 +92,14 @@ def parse_fragment_tag(s) -> Tuple[Optional[str], Set[str]]:
         data = {item.strip() for item in m.group("data").split()}
 
         if tag == "fragment" and not data:
-            raise TemplateFragmentError("fragment start tag without fragment names")
+            raise TemplateFragmentError(
+                f"fragment start tag without fragment names in line {line_idx + 1}"
+            )
 
         elif tag == "endfragment" and data:
-            raise TemplateFragmentError("fragment end tag with fragment names")
+            raise TemplateFragmentError(
+                f"fragment end tag with fragment names in line {line_idx + 1}"
+            )
 
         return tag, data
 

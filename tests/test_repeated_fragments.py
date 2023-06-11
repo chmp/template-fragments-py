@@ -62,5 +62,5 @@ def test_jinja_fragment_loader(fragment, expected_source):
     loader = FragmentLoader(base_loader)
 
     actual_source, _, _ = loader.get_source(env, f"index.html#{fragment}")
-    
+
     assert actual_source == expected_source

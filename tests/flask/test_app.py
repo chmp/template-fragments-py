@@ -31,7 +31,6 @@ def get_item(item):
     return render_template("index.html#content-item", item=item)
 
 
-
 expected_index = """\
 <body>
 <ul>
@@ -67,7 +66,7 @@ examples = [
     ("/", expected_index),
     ("/listing", expected_listing),
     ("/content", expected_content),
-    ("/item/foo", expected_item)
+    ("/item/foo", expected_item),
 ]
 
 
